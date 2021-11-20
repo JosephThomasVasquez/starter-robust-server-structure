@@ -1,4 +1,6 @@
 const router = require("express").Router();
 const controller = require("./flips.controller");
 
-router.
+router.route("/").get(controller.list);
+
+module.exports = router;
