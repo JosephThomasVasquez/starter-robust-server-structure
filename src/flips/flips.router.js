@@ -7,6 +7,10 @@ router.route("/").get(controller.list).post(controller.create);
 
 //  GET method, PUT method: attach controller.list and controller.create to router.
 // /:flipId
-router.route("/:flipId").get(controller.read).put(controller.update);
+router
+  .route("/:flipId")
+  .get(controller.read)
+  .put(controller.update)
+  .delete(controller.destroy);
 
 module.exports = router;

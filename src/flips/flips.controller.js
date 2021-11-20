@@ -77,13 +77,14 @@ const create = (req, res, next) => {
   res.status(201).json({ data: newFlip });
 };
 
-// GET /flips/:flips
+// GET flip.id
 const read = (req, res) => {
   const { flipId } = req.params;
   const foundFlip = flips.find((flip) => flip.id === Number(flipId));
   res.json({ data: foundFlip });
 };
 
+// PUT update flip
 const update = (req, res) => {
   // get flipId params
   const { flipId } = req.params;
@@ -108,9 +109,25 @@ const update = (req, res) => {
   res.json({ data: foundFlip });
 };
 
+// DELETE flip.id
+const destroy = (req, res) => {
+  const { flipId } = req.params;
+  const index = flips.findIndex((flip) => flip.id === Number(flipId));
+  // `splice()` returns an array of the deleted elements, even if it is one element
+  const deletedFlips = flips.splice(index, 1);
+  console.log("deletedFlips:", deletedFlips);
+  deletedFlips.forEach(
+    (deletedFlip) =>
+      (counts[deletedFlip.result] = counts[deletedFlip.result] - 1)
+  );
+
+  res.sendStatus(204);
+};
+
 module.exports = {
   list,
   read: [flipExists, read],
   create: [bodyHasResultProperty, resultPropertyIsValid, create],
   update: [flipExists, bodyHasResultProperty, resultPropertyIsValid, update],
+  destroy: [flipExists, destroy],
 };
