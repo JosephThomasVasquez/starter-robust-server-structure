@@ -3,6 +3,7 @@ const app = express();
 const flips = require("./data/flips-data");
 const flipsRouter = require("./flips/flips.router");
 const counts = require("./data/counts-data");
+const countsRouter = require("./counts/counts.router");
 
 app.use(express.json());
 
@@ -19,9 +20,7 @@ app.use("/counts/:countId", (req, res, next) => {
   }
 });
 
-app.get("/counts", (req, res, next) => {
-  res.json({ data: counts });
-});
+app.use("/counts", countsRouter);
 
 // /flips/:flips
 app.get("/flips/:flipId", (req, res, next) => {
