@@ -23,20 +23,6 @@ app.use("/counts/:countId", (req, res, next) => {
 // /counts router
 app.use("/counts", countsRouter);
 
-// /flips/:flips
-app.get("/flips/:flipId", (req, res, next) => {
-  const { flipId } = req.params;
-
-  const foundFlip = flips.find((flip) => flip.id === Number(flipId));
-  if (foundFlip) {
-    res.json({ data: foundFlip });
-  } else {
-    next({ status: 404, message: `Flip id not found: ${flipId}` });
-  }
-
-  res.json({ data: flips });
-});
-
 // /flips router
 app.use("/flips", flipsRouter);
 
