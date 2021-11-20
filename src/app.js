@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const flips = require("./data/flips-data");
+const flipsRouter = require("./flips/flips.router");
 const counts = require("./data/counts-data");
 
 app.use(express.json());
@@ -36,10 +37,8 @@ app.get("/flips/:flipId", (req, res, next) => {
   res.json({ data: flips });
 });
 
-// /flips GET
-app.get("/flips", (req, res) => {
-  res.json({ data: flips });
-});
+// /flips router
+app.use("/flips", flipsRouter);
 
 // VALIDATION middleware to handleif body contains a result property errors with a status code and error message
 const bodyHasResultProperty = (req, res, next) => {
