@@ -6,7 +6,7 @@ const list = (req, res) => {
   res.json({ data: flips });
 };
 
-// VALIDATION middleware
+// VALIDATION middleware ====================================================================================
 // handle if the body contains a result property errors with a status code and error message
 const bodyHasResultProperty = (req, res, next) => {
   // set the value of data to result as an object from req.body
@@ -17,6 +17,19 @@ const bodyHasResultProperty = (req, res, next) => {
   next({
     status: 400,
     message: "A 'result' property is required.",
+  });
+};
+
+const resultPropertyIsValid = (req, res, next) => {
+  const { data: { result } = {} } = req.body;
+  const validResult = ["heads", "tails", "edge"];
+
+  if (validResult.includes(result)) {
+    return next();
+  }
+  next({
+    status: 400,
+    message: `Value of the 'result' property must be one of ${validResult}. Received: ${result}`,
   });
 };
 
@@ -43,4 +56,7 @@ const create = (req, res, next) => {
   res.status(201).json({ data: newFlip });
 };
 
-module.exports = { list, create: [bodyHasResultProperty, create] };
+module.exports = {
+  list,
+  create: [bodyHasResultProperty, resultPropertyIsValid, create],
+};
