@@ -1,24 +1,12 @@
 const express = require("express");
 const app = express();
-const flips = require("./data/flips-data");
+
 const flipsRouter = require("./flips/flips.router");
-const counts = require("./data/counts-data");
 const countsRouter = require("./counts/counts.router");
 
 app.use(express.json());
 
 // TODO: Follow instructions in the checkpoint to implement ths API.
-
-app.use("/counts/:countId", (req, res, next) => {
-  const { countId } = req.params;
-  const foundCount = counts[countId];
-
-  if (foundCount === undefined) {
-    next({ status: 404, message: `Count id not found: ${countId}` });
-  } else {
-    res.json({ data: foundCount }); // Return a JSON object, not a number.
-  }
-});
 
 // /counts router
 app.use("/counts", countsRouter);
