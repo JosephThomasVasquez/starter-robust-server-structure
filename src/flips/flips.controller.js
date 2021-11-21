@@ -56,7 +56,9 @@ let lastFlipId = flips.reduce((maxId, flip) => Math.max(maxId, flip.id), 0);
 
 // GET flips
 const list = (req, res) => {
-  res.json({ data: flips });
+  const { countId } = req.params;
+  const byResult = countId ? (flip) => flip.result === countId : () => true;
+  res.json({ data: flips.filter(byResult) });
 };
 
 // POST create flip
