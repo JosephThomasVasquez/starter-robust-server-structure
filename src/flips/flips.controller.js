@@ -37,6 +37,8 @@ const flipExists = (req, res, next) => {
   const { flipId } = req.params;
   const foundFlip = flips.find((flip) => flip.id === Number(flipId));
   if (foundFlip) {
+    //   if found set the response.locals.flip to the foundFlip so it is accessible on the response chain of middleware
+    res.locals.flip = foundFlip;
     return next();
   }
   next({
@@ -58,7 +60,7 @@ const list = (req, res) => {
 };
 
 // POST create flip
-const create = (req, res, next) => {
+const create = (req, res) => {
   // set the value of data to result as an object from req.body
   const { data: { result } = {} } = req.body;
 
@@ -79,27 +81,24 @@ const create = (req, res, next) => {
 
 // GET flip.id
 const read = (req, res) => {
-  const { flipId } = req.params;
-  const foundFlip = flips.find((flip) => flip.id === Number(flipId));
-  res.json({ data: foundFlip });
+  // send the res.locals.flip response which was received from the flipExists() middlweare
+  res.json({ data: res.locals.flip });
 };
 
 // PUT update flip
 const update = (req, res) => {
-  // get flipId params
-  const { flipId } = req.params;
-  //   find flip.id in the flips database
-  const foundFlip = flips.find((flip) => flip.id === Number(flipId));
+  // get the flip from response.locals.flip which was received from flipExists() middlweare
+  const flip = res.locals.flip;
 
   //   set foundFlip.result to a variable
-  const originalResult = foundFlip.result;
+  const originalResult = flip.result;
 
   const { data: { result } = {} } = req.body;
 
   //   check if original result is not equal to result
   if (originalResult !== result) {
     // update the original flip.result to the new result value
-    foundFlip.result = result;
+    flip.result = result;
 
     // update the counts by removing 1 from the previous result and adding 1 to the new result
     counts[originalResult] = counts[originalResult] - 1;
